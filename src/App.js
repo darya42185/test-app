@@ -1,24 +1,33 @@
-import logo from './logo.svg';
-import './App.css';
+import { useState } from 'react';
+import { Provider } from 'react-redux';
+import { createStore } from 'redux';
+import cartReducer from './store/CartReducer';
+import Header from "./components/Layout/Header";
+import Modules from './components/Modules/Modules';
+import Cart from './components/Cart/Cart';
+
+const store = createStore(cartReducer);
 
 function App() {
+  const [cartIsShown, setCartIsShown] = useState(false);
+  console.log(store.getState().cart)
+
+  const showCartHandler = () => {
+    setCartIsShown(true);
+  };
+
+  const hideCartHandler = () => {
+    setCartIsShown(false);
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Provider store={store}>
+      {cartIsShown &&  <Cart onClose={hideCartHandler}/>}
+      <Header onShowCart={showCartHandler} />
+      <main>
+        <Modules/>
+      </main>
+    </Provider>
   );
 }
 
